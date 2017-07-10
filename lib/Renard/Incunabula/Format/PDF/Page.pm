@@ -1,5 +1,5 @@
-use Renard::Curie::Setup;
-package Renard::Curie::Model::Page::PDF;
+use Renard::Incunabula::Common::Setup;
+package Renard::Incunabula::Format::PDF::Page;
 # ABSTRACT: Page from a PDF document
 
 use Moo;
@@ -7,11 +7,11 @@ use MooX::HandlesVia;
 use Cairo;
 use POSIX qw(ceil);
 
-use Renard::Curie::Types qw(Str InstanceOf ZoomLevel PageNumber HashRef);
+use Renard::Incunabula::Common::Types qw(Str InstanceOf ZoomLevel PageNumber HashRef);
 
 =attr document
 
-  InstanceOf['Renard::Curie::Model::Document::PDF']
+  InstanceOf['Renard::Incunabula::Format::PDF::Document']
 
 The document that created this page.
 
@@ -19,7 +19,7 @@ The document that created this page.
 has document => (
 	is => 'ro',
 	required => 1,
-	isa => InstanceOf['Renard::Curie::Model::Document::PDF'],
+	isa => InstanceOf['Renard::Incunabula::Format::PDF::Document'],
 );
 
 =attr page_number
@@ -47,7 +47,7 @@ has png_data => (
 );
 
 method _build_png_data() {
-	my $png_data = Renard::Curie::Data::PDF::get_mutool_pdf_page_as_png(
+	my $png_data = Renard::Incunabula::MuPDF::mutool::get_mutool_pdf_page_as_png(
 		$self->document->filename, $self->page_number, $self->zoom_level
 	);
 }
@@ -86,7 +86,7 @@ method _build__size() {
 
 
 with qw(
-	Renard::Curie::Model::Page::Role::CairoRenderableFromPNG
+	Renard::Incunabula::Page::Role::CairoRenderableFromPNG
 );
 
 1;

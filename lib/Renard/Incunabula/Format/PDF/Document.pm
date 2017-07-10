@@ -1,19 +1,19 @@
-use Renard::Curie::Setup;
-package Renard::Curie::Model::Document::PDF;
+use Renard::Incunabula::Common::Setup;
+package Renard::Incunabula::Format::PDF::Document;
 # ABSTRACT: document that represents a PDF file
 
 use Moo;
-use Renard::Curie::Data::PDF;
-use Renard::Curie::Model::Page::PDF;
-use Renard::Curie::Model::Outline;
-use Renard::Curie::Types qw(PageNumber ZoomLevel);
+use Renard::Incunabula::MuPDF::mutool;
+use Renard::Incunabula::Format::PDF::Page;
+use Renard::Incunabula::Outline;
+use Renard::Incunabula::Common::Types qw(PageNumber ZoomLevel);
 
 use Math::Trig;
 use Math::Polygon;
 
 use Function::Parameters;
 
-extends qw(Renard::Curie::Model::Document);
+extends qw(Renard::Incunabula::Document);
 
 has _raw_bounds => (
 	is => 'lazy', # _build_raw_bounds
@@ -30,7 +30,7 @@ C<mutool>.
 
 =cut
 method _build_last_page_number() :ReturnType(PageNumber) {
-	my $info = Renard::Curie::Data::PDF::get_mutool_page_info_xml(
+	my $info = Renard::Incunabula::MuPDF::mutool::get_mutool_page_info_xml(
 		$self->filename
 	);
 
@@ -41,11 +41,11 @@ method _build_last_page_number() :ReturnType(PageNumber) {
 
   method get_rendered_page( (PageNumber) :$page_number )
 
-See L<Renard::Curie::Model::Document::Role::Renderable>.
+See L<Renard::Incunabula::Document::Role::Renderable>.
 
 =cut
 method get_rendered_page( (PageNumber) :$page_number, (ZoomLevel) :$zoom_level = 1.0 ) {
-	return Renard::Curie::Model::Page::PDF->new(
+	return Renard::Incunabula::Format::PDF::Page->new(
 		document => $self,
 		page_number => $page_number,
 		zoom_level => $zoom_level,
@@ -53,15 +53,15 @@ method get_rendered_page( (PageNumber) :$page_number, (ZoomLevel) :$zoom_level =
 }
 
 method _build_outline() {
-	my $outline_data = Renard::Curie::Data::PDF::get_mutool_outline_simple(
+	my $outline_data = Renard::Incunabula::MuPDF::mutool::get_mutool_outline_simple(
 		$self->filename
 	);
 
-	return Renard::Curie::Model::Outline->new( items => $outline_data );
+	return Renard::Incunabula::Outline->new( items => $outline_data );
 }
 
 method _build__raw_bounds() {
-	my $info = Renard::Curie::Data::PDF::get_mutool_page_info_xml(
+	my $info = Renard::Incunabula::MuPDF::mutool::get_mutool_page_info_xml(
 		$self->filename
 	);
 }
@@ -112,12 +112,12 @@ method _build_identity_bounds() {
 }
 
 with qw(
-	Renard::Curie::Model::Document::Role::FromFile
-	Renard::Curie::Model::Document::Role::Pageable
-	Renard::Curie::Model::Document::Role::Renderable
-	Renard::Curie::Model::Document::Role::Cacheable
-	Renard::Curie::Model::Document::Role::Outlineable
-	Renard::Curie::Model::Document::Role::Boundable
+	Renard::Incunabula::Document::Role::FromFile
+	Renard::Incunabula::Document::Role::Pageable
+	Renard::Incunabula::Document::Role::Renderable
+	Renard::Incunabula::Document::Role::Cacheable
+	Renard::Incunabula::Document::Role::Outlineable
+	Renard::Incunabula::Document::Role::Boundable
 );
 
 1;
