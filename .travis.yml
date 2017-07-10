@@ -34,4 +34,6 @@ matrix:
     - perl: blead       # ignore failures for blead perl
 before_install:
   - export DEVOPS_BRANCH="master"
+  - export PERL_CPANM_OPT="--skip-satisfied"
+  - export RENARD_DEVOPS_HOOK_PRE_PERL='command cpanm autodie~2.22'
   - eval "$(curl https://raw.githubusercontent.com/project-renard/devops/$DEVOPS_BRANCH/script/helper.pl | perl -- | awk '/^#START/,/^#END/ { print > "/dev/stdout"; next } { print > "/dev/stderr"}' )"
