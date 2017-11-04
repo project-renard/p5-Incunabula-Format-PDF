@@ -3,4 +3,4 @@ requires 'Renard::Incunabula',
 	branch => 'master';
 requires 'Renard::Incunabula::MuPDF::mutool',
 	git => 'https://github.com/project-renard/p5-Renard-Incunabula-MuPDF-mutool.git',
-	branch => 'master';
+	branch => 'curie-13-pdf-metadata';
