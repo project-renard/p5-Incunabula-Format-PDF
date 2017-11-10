@@ -3,7 +3,7 @@ package Renard::Incunabula::Format::PDF::InformationDictionary;
 # ABSTRACT: represents the PDF document information dictionary
 
 use Moo;
-use Renard::Incunabula::Common::Types qw(Maybe File InstanceOf Str HashRef);
+use Renard::Incunabula::Common::Types qw(Maybe File InstanceOf Str HashRef ArrayRef);
 use Renard::Incunabula::MuPDF::mutool;
 
 =attr filename
@@ -33,6 +33,29 @@ method _get_data( (Str) $key ) {
 
 	return $obj->data if $obj;
 }
+
+=attr default_properties
+
+An C<ArrayRef> of the default properties that are expected in the information
+dictionary.
+
+=cut
+has default_properties => (
+	is => 'ro',
+	isa => ArrayRef,
+	default => sub {
+		[qw(
+			Title
+			Subject
+			Author
+			Keywords
+			Creator
+			Producer
+			CreationDate
+			ModDate
+		)]
+	},
+);
 
 =method Title
 
