@@ -6,7 +6,7 @@ use Moo;
 use Renard::Incunabula::MuPDF::mutool;
 use Renard::Incunabula::Format::PDF::Page;
 use Renard::Incunabula::Outline;
-use Renard::Incunabula::Common::Types qw(PageNumber ZoomLevel);
+use Renard::Incunabula::Document::Types qw(PageNumber ZoomLevel);
 
 use Math::Trig;
 use Math::Polygon;
