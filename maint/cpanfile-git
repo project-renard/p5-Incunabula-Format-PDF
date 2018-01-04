@@ -1,6 +1,12 @@
 requires 'Renard::Incunabula',
 	git => 'https://github.com/project-renard/p5-Renard-Incunabula.git',
-	branch => 'master';
+	branch => '5-split-out-doc-code';
+requires 'Renard::Incunabula::Document',
+	git => 'https://github.com/project-renard/p5-Renard-Incunabula-Document.git',
+	branch => 'r-i-5-split-out-doc-code';
+requires 'Renard::Incunabula::Format::Cairo',
+	git => 'https://github.com/project-renard/p5-Renard-Incunabula-Format-Cairo.git',
+	branch => 'r-i-5-split-out-doc-code';
 requires 'Renard::Incunabula::MuPDF::mutool',
 	git => 'https://github.com/project-renard/p5-Renard-Incunabula-MuPDF-mutool.git',
-	branch => 'master';
+	branch => 'r-i-5-split-out-doc-code';

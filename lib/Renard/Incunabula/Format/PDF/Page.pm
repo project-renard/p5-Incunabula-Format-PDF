@@ -7,7 +7,8 @@ use MooX::HandlesVia;
 use Cairo;
 use POSIX qw(ceil);
 
-use Renard::Incunabula::Common::Types qw(Str InstanceOf ZoomLevel PageNumber HashRef);
+use Renard::Incunabula::Common::Types qw(Str InstanceOf HashRef);
+use Renard::Incunabula::Document::Types qw(ZoomLevel PageNumber);
 
 =attr document
 
