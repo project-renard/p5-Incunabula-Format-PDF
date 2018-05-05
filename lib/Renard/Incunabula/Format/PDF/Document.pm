@@ -143,7 +143,7 @@ method get_textual_page( (PageNumber) $page_number )
 		$page_number
 	);
 
-	my $levels = [ qw(doc page block line span char) ];
+	my $levels = [ qw(document page block line font char) ];
 	_walk_page_data( $page_st, $stext, 0, $levels );
 
 	$page_st;
