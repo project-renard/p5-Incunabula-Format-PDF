@@ -46,7 +46,7 @@ subtest "Textual information" => sub {
 			my ( $substring, %tags ) = @_;
 
 			$tagged_line_bbox .=
-				  $tags{line}
+				$tags{line}
 				? "<line bbox='@{[ $tags{line}{bbox} ]}'>$substring</line>"
 				: $substring;
 		},
