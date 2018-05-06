@@ -7,9 +7,12 @@ use Renard::Incunabula::MuPDF::mutool;
 use Renard::Incunabula::Format::PDF::Page;
 use Renard::Incunabula::Outline;
 use Renard::Incunabula::Document::Types qw(PageNumber ZoomLevel);
+use Renard::Incunabula::Common::Types qw(InstanceOf);
 
 use Math::Trig;
 use Math::Polygon;
+
+use String::Tagged;
 
 use Function::Parameters;
 
@@ -110,6 +113,64 @@ method _build_identity_bounds() {
 
 	return \@page_xy;
 }
+
+=method get_textual_page
+
+  method get_textual_page( (PageNumber) $page_number ) :ReturnType(InstanceOf['String::Tagged'])
+
+Returns a L<String::Tagged> representation of the PDF textual data for a given
+page. The return value contains tags that indicate the extent of each level as
+defined by L<Renard::Incunabula::MuPDF::mutool::get_mutool_text_stext_xml>:
+
+=for :list
+* C<page>,
+* C<block>,
+* C<line>,
+* C<span>, and
+* C<char>
+
+
+The values associated with these tags can be used to find the bounding box for
+the symbols on the page.
+
+=cut
+method get_textual_page( (PageNumber) $page_number )
+		:ReturnType(InstanceOf['String::Tagged']) {
+	my $page_st = String::Tagged->new;
+
+	my $stext = Renard::Incunabula::MuPDF::mutool::get_mutool_text_stext_xml(
+		$self->filename,
+		$page_number
+	);
+
+	my $levels = [ qw(document page block line font char) ];
+	_walk_page_data( $page_st, $stext, 0, $levels );
+
+	$page_st;
+}
+
+fun _walk_page_data( $tagged, $data, $depth, $levels ) {
+	my $level_tagged = String::Tagged->new("");
+
+	if( $depth == @$levels - 1 ) {
+		# last level is the character, so we append that to the string
+		$level_tagged .= $data->{c};
+	} else {
+		# empty pages will not have this data
+		return unless exists $data->{ $levels->[$depth+1] };
+
+		my @data_next = @{ $data->{ $levels->[$depth+1] } };
+		for my $next_data (@data_next) {
+			_walk_page_data( $level_tagged, $next_data, $depth+1, $levels );
+		}
+	}
+	$level_tagged->apply_tag(0, $level_tagged->length, $levels->[$depth] => $data );
+
+	$tagged->append_tagged($level_tagged);
+
+	return;
+}
+
 
 with qw(
 	Renard::Incunabula::Document::Role::FromFile
