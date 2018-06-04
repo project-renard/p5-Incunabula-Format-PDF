@@ -2,14 +2,12 @@
 
 use Test::Most;
 
-use lib 't/lib';
-use Renard::Incunabula::Devel::TestHelper;
-
 use Renard::Incunabula::Common::Setup;
 use Renard::Incunabula::Format::PDF::Document;
+use Renard::Incunabula::Format::PDF::Devel::TestHelper;
 
 my $pdf_ref_path = try {
-	Renard::Incunabula::Devel::TestHelper->test_data_directory->child(qw(PDF Adobe pdf_reference_1-7.pdf));
+	Renard::Incunabula::Format::PDF::Devel::TestHelper->pdf_reference_document_path;
 } catch {
 	plan skip_all => "$_";
 };
@@ -17,9 +15,7 @@ my $pdf_ref_path = try {
 plan tests => 2;
 
 subtest pdf_ref => sub {
-	my $pdf_doc = Renard::Incunabula::Format::PDF::Document->new(
-		filename => $pdf_ref_path
-	);
+	my $pdf_doc = Renard::Incunabula::Format::PDF::Devel::TestHelper->pdf_reference_document_object;
 
 	ok( $pdf_doc, "PDF document object created successfully" );
 
@@ -34,9 +30,7 @@ subtest pdf_ref => sub {
 };
 
 subtest "Textual information" => sub {
-	my $pdf_doc = Renard::Incunabula::Format::PDF::Document->new(
-		filename => $pdf_ref_path
-	);
+	my $pdf_doc = Renard::Incunabula::Format::PDF::Devel::TestHelper->pdf_reference_document_object;
 
 	my $tagged = $pdf_doc->get_textual_page( 23 );
 
