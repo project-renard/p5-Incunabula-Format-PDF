@@ -1,11 +1,11 @@
 use Renard::Incunabula::Common::Setup;
-package Renard::Incunabula::Format::PDF::Devel::TestHelper;
+package Renard::Incunabula::Block::Format::PDF::Devel::TestHelper;
 # ABSTRACT: A test helper with functions useful for testing PDF documents
 
 use Renard::Incunabula::Common::Types qw(InstanceOf);
 
 use Renard::Incunabula::Devel::TestHelper;
-use Renard::Incunabula::Format::PDF::Document;
+use Renard::Incunabula::Block::Format::PDF::Document;
 
 =classmethod pdf_reference_document_path
 
@@ -18,12 +18,12 @@ classmethod pdf_reference_document_path() {
 
 =classmethod pdf_reference_document_object
 
-Returns a L<Renard::Incunabula::Format::PDF::Document> for the document located
+Returns a L<Renard::Incunabula::Block::Format::PDF::Document> for the document located
 at the path returned by L<pdf_reference_document_path>.
 
 =cut
-classmethod pdf_reference_document_object() :ReturnType(InstanceOf['Renard::Incunabula::Format::PDF::Document']) {
-	Renard::Incunabula::Format::PDF::Document->new(
+classmethod pdf_reference_document_object() :ReturnType(InstanceOf['Renard::Incunabula::Block::Format::PDF::Document']) {
+	Renard::Incunabula::Block::Format::PDF::Document->new(
 		filename => $class->pdf_reference_document_path
 	);
 }
