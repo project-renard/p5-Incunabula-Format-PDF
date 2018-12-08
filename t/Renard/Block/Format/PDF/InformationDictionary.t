@@ -2,11 +2,11 @@
 
 use Test::Most;
 use Renard::Incunabula::Common::Setup;
-use Renard::Incunabula::Block::Format::PDF::Devel::TestHelper;
-use Renard::Incunabula::Block::Format::PDF::InformationDictionary;
+use Renard::Block::Format::PDF::Devel::TestHelper;
+use Renard::Block::Format::PDF::InformationDictionary;
 
 my $pdf_ref_path = try {
-	Renard::Incunabula::Block::Format::PDF::Devel::TestHelper->pdf_reference_document_path;
+	Renard::Block::Format::PDF::Devel::TestHelper->pdf_reference_document_path;
 } catch {
 	plan skip_all => "$_";
 };
@@ -14,7 +14,7 @@ my $pdf_ref_path = try {
 plan tests => 1;
 
 subtest pdf_ref => sub {
-	my $pdf_info = Renard::Incunabula::Block::Format::PDF::InformationDictionary->new(
+	my $pdf_info = Renard::Block::Format::PDF::InformationDictionary->new(
 		filename => $pdf_ref_path
 	);
 

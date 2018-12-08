@@ -1,5 +1,5 @@
 use Renard::Incunabula::Common::Setup;
-package Renard::Incunabula::Block::Format::PDF::Page;
+package Renard::Block::Format::PDF::Page;
 # ABSTRACT: Page from a PDF document
 
 use Moo;
@@ -12,7 +12,7 @@ use Renard::Incunabula::Document::Types qw(ZoomLevel PageNumber);
 
 =attr document
 
-  InstanceOf['Renard::Incunabula::Block::Format::PDF::Document']
+  InstanceOf['Renard::Block::Format::PDF::Document']
 
 The document that created this page.
 
@@ -20,7 +20,7 @@ The document that created this page.
 has document => (
 	is => 'ro',
 	required => 1,
-	isa => InstanceOf['Renard::Incunabula::Block::Format::PDF::Document'],
+	isa => InstanceOf['Renard::Block::Format::PDF::Document'],
 );
 
 =attr page_number
@@ -48,7 +48,7 @@ has png_data => (
 );
 
 method _build_png_data() {
-	my $png_data = Renard::Incunabula::API::MuPDF::mutool::get_mutool_pdf_page_as_png(
+	my $png_data = Renard::API::MuPDF::mutool::get_mutool_pdf_page_as_png(
 		$self->document->filename, $self->page_number, $self->zoom_level
 	);
 }

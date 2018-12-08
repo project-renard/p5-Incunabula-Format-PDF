@@ -4,7 +4,7 @@
 
 =head1 NAME
 
-Renard::Incunabula::Format::PDF - Provides a Document and Page for PDF files.
+Renard::Block::Format::PDF - Provides a Document and Page for PDF files.
 
 =head1 VERSION
 
@@ -12,7 +12,7 @@ version 0.004
 
 =head1 SEE ALSO
 
-L<Repository information|http://project-renard.github.io/doc/development/repo/p5-Renard-Incunabula-Format-PDF/>
+L<Repository information|http://project-renard.github.io/doc/development/repo/p5-Renard-Block-Format-PDF/>
 
 =head1 AUTHOR
 

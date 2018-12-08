@@ -1,10 +1,10 @@
 use Renard::Incunabula::Common::Setup;
-package Renard::Incunabula::Block::Format::PDF::Document;
+package Renard::Block::Format::PDF::Document;
 # ABSTRACT: document that represents a PDF file
 
 use Moo;
-use Renard::Incunabula::API::MuPDF::mutool;
-use Renard::Incunabula::Block::Format::PDF::Page;
+use Renard::API::MuPDF::mutool;
+use Renard::Block::Format::PDF::Page;
 use Renard::Incunabula::Outline;
 use Renard::Incunabula::Document::Types qw(PageNumber ZoomLevel);
 use Renard::Incunabula::Common::Types qw(InstanceOf);
@@ -33,7 +33,7 @@ C<mutool>.
 
 =cut
 method _build_last_page_number() :ReturnType(PageNumber) {
-	my $info = Renard::Incunabula::API::MuPDF::mutool::get_mutool_page_info_xml(
+	my $info = Renard::API::MuPDF::mutool::get_mutool_page_info_xml(
 		$self->filename
 	);
 
@@ -48,7 +48,7 @@ See L<Renard::Incunabula::Document::Role::Renderable>.
 
 =cut
 method get_rendered_page( (PageNumber) :$page_number, (ZoomLevel) :$zoom_level = 1.0 ) {
-	return Renard::Incunabula::Block::Format::PDF::Page->new(
+	return Renard::Block::Format::PDF::Page->new(
 		document => $self,
 		page_number => $page_number,
 		zoom_level => $zoom_level,
@@ -56,7 +56,7 @@ method get_rendered_page( (PageNumber) :$page_number, (ZoomLevel) :$zoom_level =
 }
 
 method _build_outline() {
-	my $outline_data = Renard::Incunabula::API::MuPDF::mutool::get_mutool_outline_simple(
+	my $outline_data = Renard::API::MuPDF::mutool::get_mutool_outline_simple(
 		$self->filename
 	);
 
@@ -64,7 +64,7 @@ method _build_outline() {
 }
 
 method _build__raw_bounds() {
-	my $info = Renard::Incunabula::API::MuPDF::mutool::get_mutool_page_info_xml(
+	my $info = Renard::API::MuPDF::mutool::get_mutool_page_info_xml(
 		$self->filename
 	);
 }
@@ -120,7 +120,7 @@ method _build_identity_bounds() {
 
 Returns a L<String::Tagged> representation of the PDF textual data for a given
 page. The return value contains tags that indicate the extent of each level as
-defined by L<Renard::Incunabula::API::MuPDF::mutool::get_mutool_text_stext_xml>:
+defined by L<Renard::API::MuPDF::mutool::get_mutool_text_stext_xml>:
 
 =for :list
 * C<page>,
@@ -138,7 +138,7 @@ method get_textual_page( (PageNumber) $page_number )
 		:ReturnType(InstanceOf['String::Tagged']) {
 	my $page_st = String::Tagged->new;
 
-	my $stext = Renard::Incunabula::API::MuPDF::mutool::get_mutool_text_stext_xml(
+	my $stext = Renard::API::MuPDF::mutool::get_mutool_text_stext_xml(
 		$self->filename,
 		$page_number
 	);

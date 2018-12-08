@@ -1,10 +1,10 @@
 use Renard::Incunabula::Common::Setup;
-package Renard::Incunabula::Block::Format::PDF::InformationDictionary;
+package Renard::Block::Format::PDF::InformationDictionary;
 # ABSTRACT: represents the PDF document information dictionary
 
 use Moo;
 use Renard::Incunabula::Common::Types qw(Maybe File InstanceOf Str HashRef ArrayRef);
-use Renard::Incunabula::API::MuPDF::mutool;
+use Renard::API::MuPDF::mutool;
 
 =attr filename
 
@@ -19,13 +19,13 @@ has filename => (
 
 has _object => (
 	is => 'lazy',
-	isa => InstanceOf['Renard::Incunabula::API::MuPDF::mutool::ObjectParser'],
+	isa => InstanceOf['Renard::API::MuPDF::mutool::ObjectParser'],
 	handles => {
 	},
 );
 
 method _build__object() {
-	Renard::Incunabula::API::MuPDF::mutool::get_mutool_get_info_object_parsed( $self->filename );
+	Renard::API::MuPDF::mutool::get_mutool_get_info_object_parsed( $self->filename );
 }
 
 method _get_data( (Str) $key ) {
@@ -190,7 +190,7 @@ date
 =end :list
 
 =cut
-method CreationDate() :ReturnType(Maybe[InstanceOf['Renard::Incunabula::API::MuPDF::mutool::DateObject']]) {
+method CreationDate() :ReturnType(Maybe[InstanceOf['Renard::API::MuPDF::mutool::DateObject']]) {
 	$self->_get_data('CreationDate');
 }
 
@@ -211,7 +211,7 @@ human-readable form (see Section 3.8.3, “Dates”).
 =end :list
 
 =cut
-method ModDate() :ReturnType(Maybe[InstanceOf['Renard::Incunabula::API::MuPDF::mutool::DateObject']]) {
+method ModDate() :ReturnType(Maybe[InstanceOf['Renard::API::MuPDF::mutool::DateObject']]) {
 	$self->_get_data('ModDate');
 }
 
