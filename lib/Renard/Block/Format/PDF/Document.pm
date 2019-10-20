@@ -99,8 +99,8 @@ method _build_identity_bounds() {
 	my $bounds = $self->_raw_bounds;
 	my @page_xy = map {
 		my $p = {
-			x => $_->{MediaBox}{r},
-			y => $_->{MediaBox}{t},
+			x => $_->{CropBox}{r}-$_->{CropBox}{l},
+			y => $_->{CropBox}{t}-$_->{CropBox}{b},
 			rotate => $_->{Rotate}{v} // 0,
 			pageno => $_->{pagenum},
 		};
