@@ -1,15 +1,18 @@
 use Renard::Incunabula::Common::Setup;
-package Renard::Incunabula::Format::PDF::Document;
+package Renard::Block::Format::PDF::Document;
 # ABSTRACT: document that represents a PDF file
-$Renard::Incunabula::Format::PDF::Document::VERSION = '0.004';
+$Renard::Block::Format::PDF::Document::VERSION = '0.005';
 use Moo;
-use Renard::Incunabula::MuPDF::mutool;
-use Renard::Incunabula::Format::PDF::Page;
+use Renard::API::MuPDF::mutool;
+use Renard::Block::Format::PDF::Page;
 use Renard::Incunabula::Outline;
 use Renard::Incunabula::Document::Types qw(PageNumber ZoomLevel);
+use Renard::Incunabula::Common::Types qw(InstanceOf);
 
 use Math::Trig;
 use Math::Polygon;
+
+use String::Tagged;
 
 use Function::Parameters;
 
@@ -20,7 +23,7 @@ has _raw_bounds => (
 );
 
 method _build_last_page_number() :ReturnType(PageNumber) {
-	my $info = Renard::Incunabula::MuPDF::mutool::get_mutool_page_info_xml(
+	my $info = Renard::API::MuPDF::mutool::get_mutool_page_info_xml(
 		$self->filename
 	);
 
@@ -28,7 +31,7 @@ method _build_last_page_number() :ReturnType(PageNumber) {
 }
 
 method get_rendered_page( (PageNumber) :$page_number, (ZoomLevel) :$zoom_level = 1.0 ) {
-	return Renard::Incunabula::Format::PDF::Page->new(
+	return Renard::Block::Format::PDF::Page->new(
 		document => $self,
 		page_number => $page_number,
 		zoom_level => $zoom_level,
@@ -36,7 +39,7 @@ method get_rendered_page( (PageNumber) :$page_number, (ZoomLevel) :$zoom_level =
 }
 
 method _build_outline() {
-	my $outline_data = Renard::Incunabula::MuPDF::mutool::get_mutool_outline_simple(
+	my $outline_data = Renard::API::MuPDF::mutool::get_mutool_outline_simple(
 		$self->filename
 	);
 
@@ -44,7 +47,7 @@ method _build_outline() {
 }
 
 method _build__raw_bounds() {
-	my $info = Renard::Incunabula::MuPDF::mutool::get_mutool_page_info_xml(
+	my $info = Renard::API::MuPDF::mutool::get_mutool_page_info_xml(
 		$self->filename
 	);
 }
@@ -79,8 +82,8 @@ method _build_identity_bounds() {
 	my $bounds = $self->_raw_bounds;
 	my @page_xy = map {
 		my $p = {
-			x => $_->{MediaBox}{r},
-			y => $_->{MediaBox}{t},
+			x => $_->{CropBox}{r}-$_->{CropBox}{l},
+			y => $_->{CropBox}{t}-$_->{CropBox}{b},
 			rotate => $_->{Rotate}{v} // 0,
 			pageno => $_->{pagenum},
 		};
@@ -93,6 +96,44 @@ method _build_identity_bounds() {
 
 	return \@page_xy;
 }
+
+method get_textual_page( (PageNumber) $page_number )
+		:ReturnType(InstanceOf['String::Tagged']) {
+	my $page_st = String::Tagged->new;
+
+	my $stext = Renard::API::MuPDF::mutool::get_mutool_text_stext_xml(
+		$self->filename,
+		$page_number
+	);
+
+	my $levels = [ qw(document page block line font char) ];
+	_walk_page_data( $page_st, $stext, 0, $levels );
+
+	$page_st;
+}
+
+fun _walk_page_data( $tagged, $data, $depth, $levels ) {
+	my $level_tagged = String::Tagged->new("");
+
+	if( $depth == @$levels - 1 ) {
+		# last level is the character, so we append that to the string
+		$level_tagged .= $data->{c};
+	} else {
+		# empty pages will not have this data
+		return unless exists $data->{ $levels->[$depth+1] };
+
+		my @data_next = @{ $data->{ $levels->[$depth+1] } };
+		for my $next_data (@data_next) {
+			_walk_page_data( $level_tagged, $next_data, $depth+1, $levels );
+		}
+	}
+	$level_tagged->apply_tag(0, $level_tagged->length, $levels->[$depth] => $data );
+
+	$tagged->append_tagged($level_tagged);
+
+	return;
+}
+
 
 with qw(
 	Renard::Incunabula::Document::Role::FromFile
@@ -113,11 +154,11 @@ __END__
 
 =head1 NAME
 
-Renard::Incunabula::Format::PDF::Document - document that represents a PDF file
+Renard::Block::Format::PDF::Document - document that represents a PDF file
 
 =head1 VERSION
 
-version 0.004
+version 0.005
 
 =head1 EXTENDS
 
@@ -152,6 +193,41 @@ version 0.004
   method get_rendered_page( (PageNumber) :$page_number )
 
 See L<Renard::Incunabula::Document::Role::Renderable>.
+
+=head2 get_textual_page
+
+  method get_textual_page( (PageNumber) $page_number ) :ReturnType(InstanceOf['String::Tagged'])
+
+Returns a L<String::Tagged> representation of the PDF textual data for a given
+page. The return value contains tags that indicate the extent of each level as
+defined by L<Renard::API::MuPDF::mutool::get_mutool_text_stext_xml>:
+
+=over 4
+
+=item *
+
+C<page>,
+
+=item *
+
+C<block>,
+
+=item *
+
+C<line>,
+
+=item *
+
+C<span>, and
+
+=item *
+
+C<char>
+
+=back
+
+The values associated with these tags can be used to find the bounding box for
+the symbols on the page.
 
 =begin comment
 

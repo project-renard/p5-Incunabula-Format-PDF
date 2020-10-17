@@ -1,10 +1,10 @@
 use Renard::Incunabula::Common::Setup;
-package Renard::Incunabula::Format::PDF::InformationDictionary;
+package Renard::Block::Format::PDF::InformationDictionary;
 # ABSTRACT: represents the PDF document information dictionary
-$Renard::Incunabula::Format::PDF::InformationDictionary::VERSION = '0.004';
+$Renard::Block::Format::PDF::InformationDictionary::VERSION = '0.005';
 use Moo;
 use Renard::Incunabula::Common::Types qw(Maybe File InstanceOf Str HashRef ArrayRef);
-use Renard::Incunabula::MuPDF::mutool;
+use Renard::API::MuPDF::mutool;
 
 has filename => (
 	is => 'ro',
@@ -14,13 +14,13 @@ has filename => (
 
 has _object => (
 	is => 'lazy',
-	isa => InstanceOf['Renard::Incunabula::MuPDF::mutool::ObjectParser'],
+	isa => InstanceOf['Renard::API::MuPDF::mutool::ObjectParser'],
 	handles => {
 	},
 );
 
 method _build__object() {
-	Renard::Incunabula::MuPDF::mutool::get_mutool_get_info_object_parsed( $self->filename );
+	Renard::API::MuPDF::mutool::get_mutool_get_info_object_parsed( $self->filename );
 }
 
 method _get_data( (Str) $key ) {
@@ -70,11 +70,11 @@ method Producer() :ReturnType(Maybe[Str]) {
 	$self->_get_data('Producer');
 }
 
-method CreationDate() :ReturnType(Maybe[InstanceOf['Renard::Incunabula::MuPDF::mutool::DateObject']]) {
+method CreationDate() :ReturnType(Maybe[InstanceOf['Renard::API::MuPDF::mutool::DateObject']]) {
 	$self->_get_data('CreationDate');
 }
 
-method ModDate() :ReturnType(Maybe[InstanceOf['Renard::Incunabula::MuPDF::mutool::DateObject']]) {
+method ModDate() :ReturnType(Maybe[InstanceOf['Renard::API::MuPDF::mutool::DateObject']]) {
 	$self->_get_data('ModDate');
 }
 
@@ -98,11 +98,11 @@ FrameMaker FrameMaker®
 
 =head1 NAME
 
-Renard::Incunabula::Format::PDF::InformationDictionary - represents the PDF document information dictionary
+Renard::Block::Format::PDF::InformationDictionary - represents the PDF document information dictionary
 
 =head1 VERSION
 
-version 0.004
+version 0.005
 
 =head1 DESCRIPTION
 

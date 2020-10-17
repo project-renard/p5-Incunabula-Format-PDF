@@ -1,7 +1,7 @@
 use Renard::Incunabula::Common::Setup;
-package Renard::Incunabula::Format::PDF::Page;
+package Renard::Block::Format::PDF::Page;
 # ABSTRACT: Page from a PDF document
-$Renard::Incunabula::Format::PDF::Page::VERSION = '0.004';
+$Renard::Block::Format::PDF::Page::VERSION = '0.005';
 use Moo;
 use MooX::HandlesVia;
 use Cairo;
@@ -13,7 +13,7 @@ use Renard::Incunabula::Document::Types qw(ZoomLevel PageNumber);
 has document => (
 	is => 'ro',
 	required => 1,
-	isa => InstanceOf['Renard::Incunabula::Format::PDF::Document'],
+	isa => InstanceOf['Renard::Block::Format::PDF::Document'],
 );
 
 has page_number => ( is => 'ro', required => 1, isa => PageNumber, );
@@ -26,7 +26,7 @@ has png_data => (
 );
 
 method _build_png_data() {
-	my $png_data = Renard::Incunabula::MuPDF::mutool::get_mutool_pdf_page_as_png(
+	my $png_data = Renard::API::MuPDF::mutool::get_mutool_pdf_page_as_png(
 		$self->document->filename, $self->page_number, $self->zoom_level
 	);
 }
@@ -69,11 +69,11 @@ __END__
 
 =head1 NAME
 
-Renard::Incunabula::Format::PDF::Page - Page from a PDF document
+Renard::Block::Format::PDF::Page - Page from a PDF document
 
 =head1 VERSION
 
-version 0.004
+version 0.005
 
 =head1 EXTENDS
 
@@ -97,7 +97,7 @@ version 0.004
 
 =head2 document
 
-  InstanceOf['Renard::Incunabula::Format::PDF::Document']
+  InstanceOf['Renard::Block::Format::PDF::Document']
 
 The document that created this page.
 

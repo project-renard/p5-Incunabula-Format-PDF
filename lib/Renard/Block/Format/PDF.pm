@@ -1,7 +1,7 @@
 use Renard::Incunabula::Common::Setup;
-package Renard::Incunabula::Format::PDF;
+package Renard::Block::Format::PDF;
 # ABSTRACT: Provides a Document and Page for PDF files.
-$Renard::Incunabula::Format::PDF::VERSION = '0.004';
+$Renard::Block::Format::PDF::VERSION = '0.005';
 1;
 
 __END__
@@ -12,15 +12,15 @@ __END__
 
 =head1 NAME
 
-Renard::Incunabula::Format::PDF - Provides a Document and Page for PDF files.
+Renard::Block::Format::PDF - Provides a Document and Page for PDF files.
 
 =head1 VERSION
 
-version 0.004
+version 0.005
 
 =head1 SEE ALSO
 
-L<Repository information|http://project-renard.github.io/doc/development/repo/p5-Renard-Incunabula-Format-PDF/>
+L<Repository information|http://project-renard.github.io/doc/development/repo/p5-Renard-Block-Format-PDF/>
 
 =head1 AUTHOR
 
