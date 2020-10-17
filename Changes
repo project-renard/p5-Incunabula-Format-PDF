@@ -1,3 +1,29 @@
+0.005 2020-10-17 02:47:41-0500
+
+  Renamed from Renard::Incunabula::Format::PDF (previous version
+  <https://metacpan.org/release/ZMUGHAL/Renard-Incunabula-Format-PDF-0.004>).
+
+  Features
+
+   - Create String::Tagged from mutool stext output. See
+     <https://github.com/project-renard/p5-Renard-Block-Format-PDF/pull/3>
+
+   - Add class that contains helpers for accessing PDF test document
+     <https://github.com/project-renard/p5-Renard-Block-Format-PDF/pull/9>.
+
+  Refactoring
+
+   - Renaming as mentioned above.
+
+  Bug fixes
+
+   - Use CropBox instead of MediaBox to obtain bounds.
+
+  Build changes
+
+   - Set minimum version for CairoRenderableFromPNG module to 0.004.
+
+
 0.004 2018-01-06 00:52:40-0600
 
   Features
